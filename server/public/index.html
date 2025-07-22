@@ -1,156 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GenoTranslate - Data Entry</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenoTranslate - Data Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .table-cell { padding: 12px 16px; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+    </style>
 </head>
 <body class="bg-gray-100">
 
-  <div class="container mx-auto p-8 max-w-2xl mt-10">
-    <h1 class="text-3xl font-bold text-center mb-6">GenoTranslate - Simple Data Entry</h1>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-700">GenoTranslate</h1>
+            <p class="text-xl text-gray-600 mt-2">Expert Data Management Portal</p>
+        </header>
 
-    <form id="entry-form" class="bg-white p-8 rounded-lg shadow-md space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label for="term-select" class="block text-sm font-medium text-gray-700">Term</label>
-          <select id="term-select" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></select>
+        <!-- Form Section -->
+        <div id="form-section" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 mb-10">
+            <h2 id="form-title" class="text-2xl font-semibold mb-6 text-gray-800">Create a New Entry</h2>
+            <form id="entry-form" class="space-y-6">
+                <input type="hidden" id="entry-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="term-select" class="block text-sm font-medium text-gray-700">Term</label>
+                        <select id="term-select" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></select>
+                    </div>
+                    <div>
+                        <label for="lang-select" class="block text-sm font-medium text-gray-700">Language</label>
+                        <select id="lang-select" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Level</label>
+                    <div id="audience-level-btns" class="flex flex-wrap gap-2 rounded-lg"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Length</label>
+                    <div id="explanation-length-btns" class="flex flex-wrap gap-2 rounded-lg"></div>
+                </div>
+                <div>
+                    <label for="explanation" class="block text-sm font-medium text-gray-700">Explanation</label>
+                    <textarea id="explanation" rows="4" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
+                </div>
+                <div class="text-right space-x-4">
+                    <button type="button" id="cancel-btn" class="hidden inline-flex items-center px-6 py-2 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50">Cancel</button>
+                    <button type="submit" id="submit-btn" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">Submit New Entry</button>
+                </div>
+            </form>
         </div>
-        <div>
-          <label for="lang-select" class="block text-sm font-medium text-gray-700">Language</label>
-          <select id="lang-select" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></select>
+
+        <!-- Database Entries Table -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">Database Entries</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Term</th>
+                            <th class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Explanation</th>
+                            <th class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entries-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
         </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Level</label>
-        <div id="audience-level-btns" class="flex flex-wrap gap-2 rounded-lg"></div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Length</label>
-        <div id="explanation-length-btns" class="flex flex-wrap gap-2 rounded-lg"></div>
-      </div>
-
-      <div>
-        <label for="explanation" class="block text-sm font-medium text-gray-700">Explanation</label>
-        <textarea id="explanation" rows="4" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
-      </div>
-
-      <div class="text-right">
-        <button type="submit" class="inline-flex justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-          Save to Database
-        </button>
-      </div>
-    </form>
-
-    <div id="response-message" class="mt-6 text-center font-medium"></div>
-
-    <div class="mt-10 bg-gray-800 p-6 rounded-lg shadow-md">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-white">Live Database Output (JSON)</h2>
-        <button id="refresh-btn" class="px-4 py-2 text-sm font-semibold bg-gray-600 text-white rounded-md hover:bg-gray-500">Refresh Data</button>
-      </div>
-      <textarea id="json-output" readonly class="w-full h-96 bg-gray-900 text-green-300 font-mono text-sm p-4 rounded-lg border border-gray-700 focus:outline-none"></textarea>
     </div>
-  </div>
 
-  <script>
-    const geneticTerms = ['Chromosome', 'Gene', 'Mutation', 'Allele', 'DNA', 'RNA', 'CRISPR', 'Genotype', 'Phenotype', 'Recessive Trait', 'Dominant Trait', 'Genetic Engineering', 'Meiosis', 'Mitosis'];
-    const languages = ['German', 'Spanish', 'French', 'Japanese', 'Hindi', 'English'];
-    const audienceLevels = [ { id: 'Low', label: 'Low' }, { id: 'Medium', label: 'Medium' }, { id: 'High', label: 'High' }];
-    const explanationLengths = [ { id: 'Short', label: 'Short' }, { id: 'Detailed', label: 'Detailed' }];
+    <script>
+        // --- CONFIG & DATA ---
+        const API_BASE_URL = '/api';
+        const geneticTerms = ['Chromosome', 'Gene', 'Mutation', 'Allele', 'DNA', 'RNA', 'CRISPR', 'Genotype', 'Phenotype', 'Recessive Trait', 'Dominant Trait', 'Genetic Engineering', 'Meiosis', 'Mitosis'];
+        const languages = ['German', 'Spanish', 'French', 'Japanese', 'Hindi', 'English'];
+        const audienceLevels = [ { id: 'Low', label: 'Low' }, { id: 'Medium', label: 'Medium' }, { id: 'High', label: 'High' }];
+        const explanationLengths = [ { id: 'Short', label: 'Short' }, { id: 'Detailed', label: 'Detailed' }];
 
-    let currentLevel = 'Low';
-    let currentLength = 'Short';
+        // --- DOM ELEMENTS ---
+        const form = document.getElementById('entry-form');
+        const entryIdInput = document.getElementById('entry-id');
+        const termSelect = document.getElementById('term-select');
+        const langSelect = document.getElementById('lang-select');
+        const audienceLevelBtnsContainer = document.getElementById('audience-level-btns');
+        const explanationLengthBtnsContainer = document.getElementById('explanation-length-btns');
+        const explanationText = document.getElementById('explanation-text');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const tableBody = document.getElementById('entries-table-body');
 
-    const form = document.getElementById('entry-form');
-    const responseMessage = document.getElementById('response-message');
-    const termSelect = document.getElementById('term-select');
-    const langSelect = document.getElementById('lang-select');
-    const audienceLevelBtnsContainer = document.getElementById('audience-level-btns');
-    const explanationLengthBtnsContainer = document.getElementById('explanation-length-btns');
-    const jsonOutput = document.getElementById('json-output');
-    const refreshBtn = document.getElementById('refresh-btn');
+        // --- STATE ---
+        let currentLevel = 'Low';
+        let currentLength = 'Short';
 
-    function populateDropdown(selectElement, options) {
-      options.forEach(option => selectElement.add(new Option(option, option)));
-    }
+        // --- FUNCTIONS ---
 
-    function createButtons(container, items, stateUpdater, initialState) {
-      container.innerHTML = '';
-      items.forEach(item => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = item.label;
-        button.className = `px-4 py-2 text-sm font-semibold rounded-md transition-all ${initialState === item.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
-        button.onclick = () => {
-          stateUpdater(item.id);
-          container.querySelectorAll('button').forEach(btn => {
-            btn.className = `px-4 py-2 text-sm font-semibold rounded-md transition-all ${btn === button ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
-          });
-        };
-        container.appendChild(button);
-      });
-    }
-
-    async function fetchAndShowJSON() {
-      try {
-        const res = await fetch("/api/entries");
-        const data = await res.json();
-        jsonOutput.value = JSON.stringify(data, null, 4);
-      } catch (err) {
-        jsonOutput.value = "Error fetching data: " + err.message;
-      }
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const entryData = {
-        term: termSelect.value,
-        language: langSelect.value,
-        level: currentLevel,
-        length: currentLength,
-        explanation: document.getElementById('explanation').value,
-      };
-
-      try {
-        const res = await fetch("/api/add-entry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(entryData)
-        });
-
-        const result = await res.json();
-        if (res.ok) {
-          responseMessage.textContent = "✅ " + result.message;
-          responseMessage.style.color = "green";
-          form.reset();
-          createButtons(audienceLevelBtnsContainer, audienceLevels, id => currentLevel = id, "Low");
-          createButtons(explanationLengthBtnsContainer, explanationLengths, id => currentLength = id, "Short");
-          fetchAndShowJSON();
-        } else {
-          throw new Error(result.message);
+        async function fetchAndRenderEntries() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/entries`);
+                const entries = await response.json();
+                tableBody.innerHTML = '';
+                entries.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="table-cell">
+                            <div class="font-bold">${entry.term}</div>
+                            <div class="text-sm text-gray-500">${entry.language} | ${entry.level} | ${entry.length}</div>
+                        </td>
+                        <td class="table-cell text-sm text-gray-600 max-w-md truncate">${entry.explanation}</td>
+                        <td class="table-cell space-x-2 whitespace-nowrap">
+                            <button onclick="populateFormForEdit('${entry._id}')" class="text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
+                            <button onclick="handleDelete('${entry._id}')" class="text-red-600 hover:text-red-900 font-medium">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching entries:', error);
+                tableBody.innerHTML = '<tr><td colspan="3" class="text-center p-4">Could not load data.</td></tr>';
+            }
         }
-      } catch (err) {
-        responseMessage.textContent = "❌ Error: " + err.message;
-        responseMessage.style.color = "red";
-      }
-    });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      populateDropdown(termSelect, geneticTerms);
-      populateDropdown(langSelect, languages);
-      createButtons(audienceLevelBtnsContainer, audienceLevels, id => currentLevel = id, "Low");
-      createButtons(explanationLengthBtnsContainer, explanationLengths, id => currentLength = id, "Short");
-      fetchAndShowJSON();
-      refreshBtn.addEventListener('click', fetchAndShowJSON);
-    });
-  </script>
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const entryId = entryIdInput.value;
+            const isUpdating = !!entryId;
+
+            const entryData = {
+                term: termSelect.value,
+                language: langSelect.value,
+                level: currentLevel,
+                length: currentLength,
+                explanation: explanationText.value.trim()
+            };
+
+            const url = isUpdating ? `${API_BASE_URL}/entries/${entryId}` : `${API_BASE_URL}/add-entry`;
+            const method = isUpdating ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(entryData)
+                });
+                if (!response.ok) throw new Error(`Server error`);
+                
+                alert(`Entry ${isUpdating ? 'updated' : 'created'} successfully!`);
+                resetForm();
+                await fetchAndRenderEntries();
+            } catch (error) {
+                alert('An error occurred.');
+            }
+        }
+
+        async function populateFormForEdit(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/entries/${id}`);
+                const entry = await response.json();
+
+                formTitle.textContent = 'Edit Entry';
+                entryIdInput.value = entry._id;
+                termSelect.value = entry.term;
+                langSelect.value = entry.language;
+                explanationText.value = entry.explanation;
+                
+                updateButtons(audienceLevelBtnsContainer, entry.level, (id) => currentLevel = id);
+                updateButtons(explanationLengthBtnsContainer, entry.length, (id) => currentLength = id);
+
+                submitBtn.textContent = 'Save Changes';
+                cancelBtn.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                alert('Could not fetch entry for editing.');
+            }
+        }
+
+        async function handleDelete(id) {
+            if (!confirm('Are you sure you want to delete this entry?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/entries/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Failed to delete');
+                alert('Entry deleted successfully!');
+                await fetchAndRenderEntries();
+            } catch (error) {
+                alert('Could not delete entry.');
+            }
+        }
+
+        function resetForm() {
+            form.reset();
+            entryIdInput.value = '';
+            formTitle.textContent = 'Create a New Entry';
+            submitBtn.textContent = 'Submit New Entry';
+            cancelBtn.classList.add('hidden');
+            updateButtons(audienceLevelBtnsContainer, 'Low', (id) => currentLevel = id);
+            updateButtons(explanationLengthBtnsContainer, 'Short', (id) => currentLength = id);
+        }
+        
+        function populateDropdown(select, options) {
+            options.forEach(o => select.add(new Option(o, o)));
+        }
+
+        function updateButtons(container, activeId, stateUpdater) {
+            stateUpdater(activeId);
+            container.querySelectorAll('button').forEach(btn => {
+                btn.className = `px-4 py-2 text-sm font-semibold rounded-md transition-all ${btn.dataset.id === activeId ? 'bg-blue-600 text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+            });
+        }
+
+        function createButtons(container, items, stateUpdater, initialState) {
+            container.innerHTML = '';
+            items.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = item.label;
+                button.dataset.id = item.id;
+                button.onclick = () => updateButtons(container, item.id, stateUpdater);
+                container.appendChild(button);
+            });
+            updateButtons(container, initialState, stateUpdater);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdown(termSelect, geneticTerms);
+            populateDropdown(langSelect, languages);
+            createButtons(audienceLevelBtnsContainer, audienceLevels, (id) => currentLevel = id, 'Low');
+            createButtons(explanationLengthBtnsContainer, explanationLengths, (id) => currentLength = id, 'Short');
+            fetchAndRenderEntries();
+            form.addEventListener('submit', handleFormSubmit);
+            cancelBtn.addEventListener('click', resetForm);
+        });
+    </script>
 </body>
 </html>

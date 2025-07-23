@@ -87,7 +87,7 @@
         const langSelect = document.getElementById('lang-select');
         const audienceLevelBtnsContainer = document.getElementById('audience-level-btns');
         const explanationLengthBtnsContainer = document.getElementById('explanation-length-btns');
-        const explanationText = document.getElementById('explanation-text');
+        const explanationText = document.getElementById('explanation');
         const formTitle = document.getElementById('form-title');
         const submitBtn = document.getElementById('submit-btn');
         const cancelBtn = document.getElementById('cancel-btn');
@@ -135,7 +135,7 @@
                 language: langSelect.value,
                 level: currentLevel,
                 length: currentLength,
-                explanation: explanationText
+                explanation: explanationText.value.trim()
             };
 
             const url = isUpdating ? `${API_BASE_URL}/entries/${entryId}` : `${API_BASE_URL}/add-entry`;

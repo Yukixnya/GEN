@@ -135,7 +135,7 @@
                 language: langSelect.value,
                 level: currentLevel,
                 length: currentLength,
-                explanation: explanationText.value.trim()
+                explanation: explanationText
             };
 
             const url = isUpdating ? `${API_BASE_URL}/entries/${entryId}` : `${API_BASE_URL}/add-entry`;
